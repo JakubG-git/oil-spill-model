@@ -26,7 +26,9 @@ class Visualizer:
                     gra = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     x, y = pygame.mouse.get_pos()
-                    self.obraz.set_at((x, y), (0, 0, 0))
+                    for i in range(-2, 2):
+                        for j in range(-2, 2):
+                            self.obraz.set_at((x + i, y + j), (0, 0, 0))
             self.update()
 
     def update(self):
