@@ -16,14 +16,7 @@ class Particle:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
-    def move_with_wind(self, vis):
-        # Find the cell the particle is in
-        current_cell = self.get_current_cell(vis)
-
-        # Move the particle based on the wind vector of the cell
-        if current_cell and current_cell.wind_vector:
-            self.x = (self.x + int(current_cell.wind_vector[0])) % 800
-            self.y = (self.y + int(current_cell.wind_vector[1])) % 600
+    
 
     def get_current_cell(self, vis) -> Cell:
         for cell in vis.get_cells():

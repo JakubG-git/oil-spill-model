@@ -1,5 +1,5 @@
 import numpy as np
-from model.cell import *
+from model.cell import Cell
 
 def generate_random_vectors_and_temps(cells: list[Cell]):
     for cell in cells:
