@@ -115,7 +115,7 @@ class Visualizer:
 
     def update(self):
         pygame.display.update()
-        self.draw_cells()
+        # self.draw_cells()
         self.window.blit(self.obraz, (0, 0))
 
     def update_particle(self, particle: Particle):
