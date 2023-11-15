@@ -4,7 +4,7 @@ from model.particle import Particle
 
 
 
-# #get cells that have particles in them
+# get cells that have particles in them
 
 # def get_cells_with_particles(vis: Visualiser) -> list[Cell]:
 #     cells_with_particles = []
@@ -16,15 +16,15 @@ from model.particle import Particle
 
 def move_particles(vis):
     for particle in vis.get_particles():
-        move_with_wind(particle, vis)
+        advection(particle, vis)
         # move_with_water(particle, vis)
         vis.update_particle(particle)
-        vis.update()
+    vis.update()
 
 
-
-def move_with_wind(particle: Particle, vis):
+def advection(particle: Particle, vis):
         current_cell = particle.get_current_cell(vis)
-        if current_cell and current_cell.wind_vector:
-            particle.x = (particle.x + int(current_cell.wind_vector[0])) % 800
-            particle.y = (particle.y + int(current_cell.wind_vector[1])) % 600
+        if current_cell and current_cell.wind_vector and current_cell.water_vector and particle.isActive:
+            particle.x = (particle.x + int((0.03 * current_cell.wind_vector[0]) + 1.1 * current_cell.water_vector[0])) % 800
+            particle.y = (particle.y + int((0.03 * current_cell.wind_vector[1] + 1.1 * current_cell.water_vector[1]))) % 600
+

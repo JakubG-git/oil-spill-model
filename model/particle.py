@@ -5,7 +5,9 @@ class Particle:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.size = 3  # Size of the particle (adjust as needed)
+        self.size = 3  # Size of the particle
+        self.isActive = True
+        self.isDead = False
 
     def __str__(self):
         return f"X: {self.x}, Y: {self.y}"
