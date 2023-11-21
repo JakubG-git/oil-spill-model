@@ -2,6 +2,7 @@ import pygame
 import cv2
 from model.cell import *
 from data.generator import generate_random_vectors_and_temps
+from data.generator import *
 from model.particle import *
 from applicator.applicator import *
 from typing import List
@@ -45,7 +46,8 @@ class Visualizer:
         self.obraz = pygame.image.load(map)
         self.original_obraz = pygame.image.load(map)
         self.window.blit(self.obraz, (0, 0))
-        self.cells = generate_random_vectors_and_temps(create_cells(width, height))
+        # self.cells = generate_random_vectors_and_temps(create_cells(width, height))
+        self.cells = set_vectors_and_temps(create_cells(width, height))
         # self.generate_arrow_image()
         for cell in self.cells:
             print(cell)
