@@ -3,6 +3,8 @@ from model.cell import Cell
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from PIL import Image
+import pandas as pd
+import os
 
 def generate_random_vectors_and_temps(cells: list[Cell]):
     for cell in cells:
@@ -28,8 +30,8 @@ def generate_random_vectors_and_temps(cells: list[Cell]):
 # but in a pattern that makes sense, meaning that the wind vectors should be
 # similar to each other in a certain area
 def generate_wind_vectors(wind_speed: float, wind_direction: float) -> list[tuple[float, float]]:
-    rows = 12
-    columns = 16
+    rows = 360
+    columns = 420
     wind_speeds = []
     wind_directions = []
 
@@ -69,106 +71,58 @@ def generate_wind_vectors(wind_speed: float, wind_direction: float) -> list[tupl
     return wind_vectors
 
 
-def generate_water_vectors(water_speed: float, water_direction: float) -> list[tuple[float, float]]:
-    rows = 12
-    columns = 16
-    water_speeds = []
-    water_directions = []
-
-    for i in range(rows):
-        row_speed = []
-        row_direction = []
-        for j in range(columns):
-            if i == 0 and j == 0:
-                row_speed.append(water_speed)
-                row_direction.append(water_direction)
-            else:
-                if i > 0 and j > 0:
-                    avg_speed = (water_speeds[i][j - 1] + water_speeds[i - 1][j]) / 2
-                    avg_direction = (water_directions[i][j - 1] + water_directions[i - 1][j]) / 2
-                elif i > 0:
-                    avg_speed = water_speeds[i - 1][j]
-                    avg_direction = water_directions[i - 1][j]
-                elif j > 0:
-                    avg_speed = water_speeds[i][j - 1]
-                    avg_direction = water_directions[i][j - 1]
-
-                water_speed = avg_speed + np.random.uniform(-2, 2)
-                water_direction = avg_direction + np.random.uniform(-15, 15)
-                row_speed.append(water_speed)
-                row_direction.append(water_direction)
-
-            water_speeds.append(row_speed)
-            water_directions.append(row_direction)
-
+def get_water_vectors() -> list[tuple[float, float]]:
     water_vectors = []
-    for i in range(rows):
-        for j in range(columns):
-            water_speed_x = water_speeds[i][j] * np.cos(np.radians(water_directions[i][j]))
-            water_speed_y = water_speeds[i][j] * np.sin(np.radians(water_directions[i][j]))
-            water_vectors.append((water_speed_x, water_speed_y))
+    path = os.path.join('data', 'hycom_with_NaN_values.csv')
+    df = pd.read_csv(path)
+    df_size = len(df)
 
+    for i in range(df_size):
+        if df['water_u'][i] != '--':
+            water_vectors.append((float(df['water_u'][i]), float(df['water_v'][i])))
+        else:
+            water_vectors.append((0.0, 0.0))
     return water_vectors
 
 def generate_temps():
-    return [np.random.uniform(0, 30) for _ in range(192)]
+    return [np.random.uniform(0, 30) for _ in range(151200)]
 
 def set_vectors_and_temps(cells: list[Cell]):
     wind_vectors = generate_wind_vectors(10, np.random.uniform(0, 360))
-    water_vectors = generate_water_vectors(10, np.random.uniform(0, 360))
+    water_vectors = get_water_vectors()
     temps = generate_temps()
-    generate_arrows(wind_vectors, water_vectors)
+    # generate_arrows(wind_vectors, water_vectors)
 
     for i in range(len(cells)):
         cells[i].set_vectors_n_temp(wind_vectors[i], water_vectors[i], temps[i])
 
     return cells
 
-# def generate_arrows(wind_vectors: list[tuple[float, float]], water_vectors: list[tuple[float, float]]):
-#     fig, ax = plt.subplots(figsize=(12, 16))
-
-#     for wind_vector, water_vector in zip(wind_vectors, water_vectors):
-#         ax.arrow(0, 0, wind_vector[0], wind_vector[1], head_width=0.5, head_length=0.7, fc='blue', ec='blue', alpha=0.7)
-#         ax.arrow(0, 0, water_vector[0], water_vector[1], head_width=0.5, head_length=0.7, fc='green', ec='green', alpha=0.7)
-
-#     ax.set_xlim(-20, 20)
-#     ax.set_ylim(-20, 20)
-#     ax.set_aspect('equal', adjustable='box')
-#     #invert x axis
-#     ax.invert_xaxis()
-#     ax.set_xlabel('x')
-#     #invert y axis
-#     ax.invert_yaxis()
-#     ax.set_ylabel('y')
-#     ax.set_title('Wind and Water Vectors')
-#     plt.grid(True)
-#     plt.savefig('arrows.png', dpi=100)
-
 def generate_arrows(wind_vectors, water_vectors):
     fig, ax = plt.subplots()
     ax.set_aspect('equal', 'box')
 
     # Plot grid with arrows
-    rows = 12
-    columns = 16
+    rows = 18
+    columns = 21
     cell_size = 1.0
 
     for i in range(rows):
         for j in range(columns):
             x = j * cell_size
             y = rows - i - 1 * cell_size  # Invert the y-axis to match the grid
-            wind_vector = wind_vectors[i * columns + j]
+            #wind_vector = wind_vectors[i * columns + j]
             water_vector = water_vectors[i * columns + j]
-            arrow_scale = 0.1
+            arrow_scale = 1.0
             # Plot arrow
-            arrow1 = patches.FancyArrowPatch(
-                (x + 0.5 * cell_size, y + 0.5 * cell_size),
-                (x + 0.5 * cell_size + arrow_scale * wind_vector[0], y + 0.5 * cell_size + arrow_scale * wind_vector[1]),
-                color='black',
-                mutation_scale=10,
-                linewidth=0.6,
-                arrowstyle='->'
-            )
+            # arrow1 = patches.FancyArrowPatch(
+            #     (x + 0.5 * cell_size, y + 0.5 * cell_size),
+            #     (x + 0.5 * cell_size + arrow_scale * wind_vector[0], y + 0.5 * cell_size + arrow_scale * wind_vector[1]),
+            #     color='black',
+            #     mutation_scale=10,
+            #     linewidth=0.6,
+            #     arrowstyle='->'
+            # )
             arrow2 = patches.FancyArrowPatch(
                 (x + 0.5 * cell_size, y + 0.5 * cell_size),
                 (x + 0.5 * cell_size + arrow_scale * water_vector[0], y + 0.5 * cell_size + arrow_scale * water_vector[1]),
@@ -177,8 +131,9 @@ def generate_arrows(wind_vectors, water_vectors):
                 linewidth=0.6,
                 arrowstyle='->'
             )
-            ax.add_patch(arrow1)
+            #ax.add_patch(arrow1)
             ax.add_patch(arrow2)
+            print(x,y)
 
     # Set axis limits
     ax.set_xlim(0, columns)
@@ -189,12 +144,14 @@ def generate_arrows(wind_vectors, water_vectors):
     ax.set_yticks(np.arange(0, rows + 1, 1))
     ax.set_xticklabels([])
     ax.set_yticklabels([])
-    plt.savefig('wind_vectors_plot.png')
+    path = os.path.join("images", "water_vectors_plot.png")
+    plt.savefig(path)
 
     # Rotate the saved image
-    img = Image.open('wind_vectors_plot.png')
+    img = Image.open(path)
     rotated_img = img.rotate(180).transpose(Image.FLIP_LEFT_RIGHT)  # Change the rotation angle as needed
-    rotated_img.save('rotated_wind_vectors_plot.png')
+    path = os.path.join("images", "rotated_water_vectors_plot.png")
+    rotated_img.save(path)
 
     # Show the rotated image
     rotated_img.show()
