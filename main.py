@@ -1,8 +1,8 @@
 from view.visualiser import Visualizer
 
-width = 800
-height = 600
-map_ = "images/map.png"
+width = 840
+height = 720
+map_ = "images/mapa840x720.png"
 
 visualizer = Visualizer()
 visualizer.initialize(map_, width, height)

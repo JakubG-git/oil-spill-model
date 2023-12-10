@@ -6,6 +6,7 @@ from data.generator import *
 from model.particle import *
 from applicator.applicator import *
 from typing import List
+import os
 from copy import copy
 import matplotlib.pyplot as plt
 import numpy as np
@@ -46,11 +47,15 @@ class Visualizer:
         self.obraz = pygame.image.load(map)
         self.original_obraz = pygame.image.load(map)
         self.window.blit(self.obraz, (0, 0))
-        # self.cells = generate_random_vectors_and_temps(create_cells(width, height))
         self.cells = set_vectors_and_temps(create_cells(width, height))
-        # self.generate_arrow_image()
-        for cell in self.cells:
-            print(cell)
+
+        # Zapis pliku tekstowego z info o cellach i wyświetlanie ich
+        # path = os.path.join("data", "cells.txt")
+        # with open(path, 'w') as file:
+        #     for cell in self.cells:
+        #         print(cell)
+        #         file.write(str(cell) + "\n")
+
         pygame.display.update()
 
     def session(self):
@@ -80,7 +85,7 @@ class Visualizer:
                         self.obraz = copy(self.original_obraz)
                         move_particles(self)
                         #sleep 1 second
-                        pygame.time.delay(200)
+                        #pygame.time.delay(200)
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                 main_loop = False
