@@ -122,9 +122,10 @@ class Visualizer:
         self.window.blit(self.obraz, (0, 0))
 
     def update_particle(self, particle: Particle):
+        rgb = particle.get_color()
         for coord in particle.get_coords_of_particle():
             if self.valid_coords(coord[0], coord[1]) and self.woda[coord[1], coord[0]]:
-                self.obraz.set_at((coord[0], coord[1]), (0, 0, 0))
+                self.obraz.set_at((coord[0], coord[1]), rgb)
             elif self.valid_coords(coord[0], coord[1]) and not self.woda[coord[1], coord[0]]:
                 particle.isActive = False
             elif not self.valid_coords(coord[0], coord[1]):

@@ -2,11 +2,11 @@ from model.cell import Cell
 import math
 class Particle:
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, density=2):
         self.x = x
         self.y = y
         self.size = 3  # Size of the particle
-        self.density = 1.0
+        self.density = 2
         self.isActive = True
         self.isDead = False
 
@@ -24,7 +24,11 @@ class Particle:
 
     def get_current_cell(self, vis) -> Cell:
         index = math.floor(self.x / 2) + (420 * math.floor(self.y / 2))
-        return vis.get_cells()[index]
+        try:
+            current_cell = vis.get_cells()[index]
+        except:
+            current_cell = vis.get_cells()[index % len(vis.get_cells())]
+        return current_cell
 
     def get_coords_of_particle(self) -> list:
         coords = []
@@ -32,3 +36,11 @@ class Particle:
             for j in range(-2, 2):
                 coords.append((int(self.x + i), int(self.y + j)))
         return coords
+    
+    def get_color(self):
+        # get color based on density in grayscale
+        r = int(255 - (255 * self.density)) % 255
+        g = int(255 - (255 * self.density)) % 255
+        b = int(255 - (255 * self.density)) % 255
+        return (r, g, b)
+        
