@@ -7,4 +7,4 @@ def binarize(img_path, threshold):
     cv2.imwrite('binarized.png', binarized)
     return
 
-binarize('mapa.png', 150)
+binarize('mapa840x720.png', 150)
