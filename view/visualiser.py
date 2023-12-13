@@ -4,7 +4,6 @@ from model.cell import *
 from data.generator import *
 from model.particle import *
 from applicator.applicator import *
-from typing import List
 import os
 from copy import copy
 
@@ -81,7 +80,7 @@ class Visualizer:
                         self.obraz = copy(self.original_obraz)
                         move_particles(self)
                         #sleep 1 second
-                        pygame.time.delay(200)
+                        pygame.time.delay(300)
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                 main_loop = False
