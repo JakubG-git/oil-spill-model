@@ -1,5 +1,5 @@
 from model.cell import Cell
-
+import math
 class Particle:
 
     def __init__(self, x, y):
@@ -21,14 +21,12 @@ class Particle:
     
 
     def get_current_cell(self, vis) -> Cell:
-        for cell in vis.get_cells():
-            if cell.x <= self.x <= cell.x + cell.size and cell.y <= self.y <= cell.y + cell.size:
-                return cell
-        return None
+        index = math.floor(self.x / 2) + (420 * math.floor(self.y / 2))
+        return vis.get_cells()[index]
 
     def get_coords_of_particle(self) -> list:
         coords = []
         for i in range(-2, 2):
             for j in range(-2, 2):
-                coords.append((self.x + i, self.y + j))
+                coords.append((int(self.x + i), int(self.y + j)))
         return coords

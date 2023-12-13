@@ -33,7 +33,7 @@ class Visualizer:
 
 
     def initialize_water(self):
-        woda = cv2.imread('images/water.png', cv2.IMREAD_GRAYSCALE)
+        woda = cv2.imread('images/binarized.png', cv2.IMREAD_GRAYSCALE)
         woda_ = woda > 200
         self.woda = woda_
         return
@@ -48,7 +48,6 @@ class Visualizer:
         self.original_obraz = pygame.image.load(map)
         self.window.blit(self.obraz, (0, 0))
         self.cells = set_vectors_and_temps(create_cells(width, height))
-
         # Zapis pliku tekstowego z info o cellach i wyświetlanie ich
         # path = os.path.join("data", "cells.txt")
         # with open(path, 'w') as file:
@@ -85,7 +84,7 @@ class Visualizer:
                         self.obraz = copy(self.original_obraz)
                         move_particles(self)
                         #sleep 1 second
-                        #pygame.time.delay(200)
+                        pygame.time.delay(200)
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                 main_loop = False
@@ -113,7 +112,7 @@ class Visualizer:
             self.update()
 
     def valid_coords(self, x, y):
-        return 0 <= x < 800 and 0 <= y < 600
+        return 0 <= x < 840 and 0 <= y < 720
 
 
     def draw_cells(self):

@@ -24,7 +24,8 @@ def move_particles(vis):
 
 def advection(particle: Particle, vis):
         current_cell = particle.get_current_cell(vis)
+        skalar = 10
         if current_cell and current_cell.wind_vector and current_cell.water_vector and particle.isActive:
-            particle.x = (particle.x + int((0.12 * current_cell.wind_vector[0]) + 4.4 * current_cell.water_vector[0]))
-            particle.y = (particle.y + int((0.12 * current_cell.wind_vector[1] + 4.4 * current_cell.water_vector[1])))
+            particle.x = (particle.x + (skalar * 0.03 * current_cell.wind_vector[0]) + skalar * 1.1 * current_cell.water_vector[0])
+            particle.y = (particle.y + (skalar * 0.03 * current_cell.wind_vector[1] + skalar * 1.1 * current_cell.water_vector[1]))
 
