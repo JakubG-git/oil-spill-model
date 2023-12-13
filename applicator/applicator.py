@@ -18,6 +18,7 @@ def move_particles(vis):
     for particle in vis.get_particles():
         advection(particle, vis)
         # move_with_water(particle, vis)
+        # evaporation(particle, vis)
         vis.update_particle(particle)
     vis.update()
 
@@ -29,3 +30,4 @@ def advection(particle: Particle, vis):
             particle.x = (particle.x + (skalar * 0.03 * current_cell.wind_vector[0]) + skalar * 1.1 * current_cell.water_vector[0])
             particle.y = (particle.y + (skalar * 0.03 * current_cell.wind_vector[1] + skalar * 1.1 * current_cell.water_vector[1]))
 
+# def evaporation(particle: Particle, vis):
