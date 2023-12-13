@@ -6,25 +6,6 @@ from PIL import Image
 import pandas as pd
 import os
 
-def generate_random_vectors_and_temps(cells: list[Cell]):
-    for cell in cells:
-        # Generate random wind vectors
-        wind_speed = np.random.uniform(1, 20)
-        wind_direction = np.random.uniform(0, 360)
-        wind_direction_rad = np.radians(wind_direction)
-        wind_vector = (wind_speed * np.cos(wind_direction_rad), wind_speed * np.sin(wind_direction_rad))
-
-        # Generate random water vectors and temperatures
-        water_speed = np.random.uniform(1, 10)
-        water_direction = np.random.uniform(0, 360)
-        water_direction_rad = np.radians(water_direction)
-        water_vector = (water_speed * np.cos(water_direction_rad), water_speed * np.sin(water_direction_rad))
-        water_temp = np.random.uniform(0, 30)
-
-        cell.set_vectors_n_temp(wind_vector, water_vector, water_temp)
-    return cells
-
-
 # cells is a list of Cell objects, i have a map consisting of 16x12 cells
 # i want this function to generate wind vectors for each cell
 # but in a pattern that makes sense, meaning that the wind vectors should be
@@ -84,13 +65,23 @@ def get_water_vectors() -> list[tuple[float, float]]:
             water_vectors.append((0.0, 0.0))
     return water_vectors
 
-def generate_temps():
-    return [np.random.uniform(0, 30) for _ in range(151200)]
+def get_temps():
+    water_vectors = []
+    path = os.path.join('data', 'hycom_with_NaN_values.csv')
+    df = pd.read_csv(path)
+    df_size = len(df)
+
+    for i in range(df_size):
+        if df['water_u'][i] != '--':
+            water_vectors.append(float(df['water_temp'][i]))
+        else:
+            water_vectors.append(0.0)
+    return water_vectors
 
 def set_vectors_and_temps(cells: list[Cell]):
     wind_vectors = generate_wind_vectors(10, np.random.uniform(0, 360))
     water_vectors = get_water_vectors()
-    temps = generate_temps()
+    temps = get_temps()
     # generate_arrows(wind_vectors, water_vectors)
 
     for i in range(len(cells)):

@@ -6,6 +6,7 @@ class Particle:
         self.x = x
         self.y = y
         self.size = 3  # Size of the particle
+        self.density = 1.0
         self.isActive = True
         self.isDead = False
 
@@ -18,7 +19,8 @@ class Particle:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
-    
+    def get_density(self):
+        return self.density
 
     def get_current_cell(self, vis) -> Cell:
         index = math.floor(self.x / 2) + (420 * math.floor(self.y / 2))

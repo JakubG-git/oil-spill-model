@@ -1,18 +1,16 @@
 import pygame
 import cv2
 from model.cell import *
-from data.generator import generate_random_vectors_and_temps
 from data.generator import *
 from model.particle import *
 from applicator.applicator import *
 from typing import List
 import os
 from copy import copy
-import matplotlib.pyplot as plt
-import numpy as np
+
 SIMULATION_START = pygame.USEREVENT + 1 # start simulation
 SIMULATION_END = pygame.USEREVENT + 2 # end simulation
-DISPLAY = pygame.display.set_mode((800, 600))
+DISPLAY = pygame.display.set_mode((840, 720))
 SIMULATION_IN_PROGRESS = False
 class Visualizer:
     def __init__(self):
@@ -49,11 +47,10 @@ class Visualizer:
         self.window.blit(self.obraz, (0, 0))
         self.cells = set_vectors_and_temps(create_cells(width, height))
         # Zapis pliku tekstowego z info o cellach i wyświetlanie ich
-        # path = os.path.join("data", "cells.txt")
-        # with open(path, 'w') as file:
-        #     for cell in self.cells:
-        #         print(cell)
-        #         file.write(str(cell) + "\n")
+        path = os.path.join("data", "cells.txt")
+        with open(path, 'w') as file:
+            for cell in self.cells:
+                file.write(str(cell) + "\n")
 
         pygame.display.update()
 
