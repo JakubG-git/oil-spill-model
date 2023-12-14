@@ -7,11 +7,14 @@ from applicator.applicator import *
 import os
 from copy import copy
 
-SIMULATION_START = pygame.USEREVENT + 1 # start simulation
-SIMULATION_END = pygame.USEREVENT + 2 # end simulation
+SIMULATION_START = pygame.USEREVENT + 1  # start simulation
+SIMULATION_END = pygame.USEREVENT + 2  # end simulation
 DISPLAY = pygame.display.set_mode((840, 720))
 SIMULATION_IN_PROGRESS = False
+
+
 class Visualizer:
+
     def __init__(self):
         self.window = None
         self.original_obraz = None
@@ -22,19 +25,18 @@ class Visualizer:
 
     def get_cells(self):
         return self.cells
+
     def get_particles(self):
         return self.particles
 
     def initialize_display(self):
         pygame.init()
 
-
     def initialize_water(self):
         woda = cv2.imread('images/binarized.png', cv2.IMREAD_GRAYSCALE)
         woda_ = woda > 200
         self.woda = woda_
         return
-
 
     def initialize(self, map, width, height):
         pygame.init()
@@ -60,7 +62,6 @@ class Visualizer:
         global SIMULATION_START
         global SIMULATION_END
 
-
         while main_loop:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -79,7 +80,7 @@ class Visualizer:
                     while SIMULATION_IN_PROGRESS:
                         self.obraz = copy(self.original_obraz)
                         move_particles(self)
-                        #sleep 1 second
+                        # sleep 0.3s
                         pygame.time.delay(300)
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
@@ -91,25 +92,21 @@ class Visualizer:
                                     SIMULATION_IN_PROGRESS = not SIMULATION_IN_PROGRESS 
                 elif event.type == SIMULATION_END:
                     print("Simulation ending")
-                    
-
-
 
             if drawing:
                 x, y = pygame.mouse.get_pos()
                 if self.valid_coords(x, y) and self.woda[y, x]:
-                    p = Particle(x,y)
+                    p = Particle(x, y)
                     if p not in self.particles:
                         self.particles.append(p)
                         print(self.particles)
                         for coord in p.get_coords_of_particle():
-                                self.obraz.set_at((coord[0], coord[1]), (0, 0, 0))
+                            self.obraz.set_at((coord[0], coord[1]), (0, 0, 0))
 
             self.update()
 
     def valid_coords(self, x, y):
         return 0 <= x < 840 and 0 <= y < 720
-
 
     def draw_cells(self):
         for cell in self.cells:
@@ -117,6 +114,8 @@ class Visualizer:
 
     def update(self):
         pygame.display.update()
+        # self.cells = set_wind_vectors(self.cells)
+        # print(self.cells[15].wind_vector)
         # self.draw_cells()
         self.window.blit(self.obraz, (0, 0))
 
@@ -131,26 +130,3 @@ class Visualizer:
                 particle.isDead = True
         if particle.isDead:
             self.particles.remove(particle)
-            
-    # def generate_arrow_image(self):
-    #     arrow_image = np.zeros((600, 800, 3), dtype=np.uint8)
-    #     arrow_length = 20
-
-    #     for cell in self.cells:
-    #         center_x = cell.x + cell.size // 2
-    #         center_y = cell.y + cell.size // 2
-
-    #         advection_vector = cell.get_advection_vector()  # Assume you have a method to get advection vector in Cell class
-
-    #         if advection_vector:
-    #             # Normalize the vector and scale it to arrow_length
-    #             normalized_vector = advection_vector / np.linalg.norm(advection_vector)
-    #             arrow_end_x = int(center_x + normalized_vector[0] * arrow_length)
-    #             arrow_end_y = int(center_y + normalized_vector[1] * arrow_length)
-
-    #             pygame.draw.line(arrow_image, (255, 0, 0), (center_x, center_y), (arrow_end_x, arrow_end_y), 2)
-    #             pygame.draw.polygon(arrow_image, (255, 0, 0), [(arrow_end_x, arrow_end_y - 5),
-    #                                                            (arrow_end_x - 5, arrow_end_y + 5),
-    #                                                            (arrow_end_x + 5, arrow_end_y + 5)])
-
-    #     pygame.image.save(pygame.surfarray.make_surface(arrow_image), 'arrows.png')
