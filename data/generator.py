@@ -105,7 +105,7 @@ def set_water_vectors(cells: list[Cell]):
 
 
 def set_wind_vectors(cells: list[Cell]):
-    wind_vectors = generate_wind_vectors(10, np.random.uniform(0, 360))
+    wind_vectors = generate_wind_vectors(2, np.random.uniform(0, 360))
     for i in range(len(cells)):
         cells[i].set_wind_wector(wind_vectors[i])
     return cells
