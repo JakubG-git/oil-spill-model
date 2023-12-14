@@ -6,6 +6,7 @@ from PIL import Image
 import pandas as pd
 import os
 
+
 # cells is a list of Cell objects, i have a map consisting of 16x12 cells
 # i want this function to generate wind vectors for each cell
 # but in a pattern that makes sense, meaning that the wind vectors should be
@@ -63,7 +64,17 @@ def get_water_vectors() -> list[tuple[float, float]]:
             water_vectors.append((float(df['water_u'][i]), float(df['water_v'][i])))
         else:
             water_vectors.append((0.0, 0.0))
-    return water_vectors
+
+    water_vectors_rows = []
+    for i in range(360):
+        water_vectors_rows.append(water_vectors[i * 420:(i + 1) * 420])
+    water_vectors_rows.reverse()
+    water_vectors2 = []
+    for row in water_vectors_rows:
+        water_vectors2 += row
+
+    return water_vectors2
+
 
 def get_temps():
     water_vectors = []
@@ -78,16 +89,34 @@ def get_temps():
             water_vectors.append(0.0)
     return water_vectors
 
+
 def set_vectors_and_temps(cells: list[Cell]):
-    wind_vectors = generate_wind_vectors(10, np.random.uniform(0, 360))
-    water_vectors = get_water_vectors()
-    temps = get_temps()
-    # generate_arrows(wind_vectors, water_vectors)
-
-    for i in range(len(cells)):
-        cells[i].set_vectors_n_temp(wind_vectors[i], water_vectors[i], temps[i])
-
+    cells = set_wind_vectors(cells)
+    cells = set_water_vectors(cells)
+    cells = set_temps(cells)
     return cells
+
+
+def set_water_vectors(cells: list[Cell]):
+    water_vectors = get_water_vectors()
+    for i in range(len(cells)):
+        cells[i].set_water_wector(water_vectors[i])
+    return cells
+
+
+def set_wind_vectors(cells: list[Cell]):
+    wind_vectors = generate_wind_vectors(10, np.random.uniform(0, 360))
+    for i in range(len(cells)):
+        cells[i].set_wind_wector(wind_vectors[i])
+    return cells
+
+
+def set_temps(cells: list[Cell]):
+    temps = get_temps()
+    for i in range(len(cells)):
+        cells[i].set_water_temp(temps[i])
+    return cells
+
 
 def generate_arrows(wind_vectors, water_vectors):
     fig, ax = plt.subplots()
@@ -102,7 +131,7 @@ def generate_arrows(wind_vectors, water_vectors):
         for j in range(columns):
             x = j * cell_size
             y = rows - i - 1 * cell_size  # Invert the y-axis to match the grid
-            #wind_vector = wind_vectors[i * columns + j]
+            # wind_vector = wind_vectors[i * columns + j]
             water_vector = water_vectors[i * columns + j]
             arrow_scale = 1.0
             # Plot arrow
@@ -116,15 +145,16 @@ def generate_arrows(wind_vectors, water_vectors):
             # )
             arrow2 = patches.FancyArrowPatch(
                 (x + 0.5 * cell_size, y + 0.5 * cell_size),
-                (x + 0.5 * cell_size + arrow_scale * water_vector[0], y + 0.5 * cell_size + arrow_scale * water_vector[1]),
+                (x + 0.5 * cell_size + arrow_scale * water_vector[0],
+                 y + 0.5 * cell_size + arrow_scale * water_vector[1]),
                 color='blue',
                 mutation_scale=10,
                 linewidth=0.6,
                 arrowstyle='->'
             )
-            #ax.add_patch(arrow1)
+            # ax.add_patch(arrow1)
             ax.add_patch(arrow2)
-            print(x,y)
+            print(x, y)
 
     # Set axis limits
     ax.set_xlim(0, columns)
