@@ -38,6 +38,12 @@ class Visualizer:
         self.woda = woda_
         return
 
+    def log_cells(self):
+        path = os.path.join("log", "cells_log.txt")
+        with open(path, 'w') as file:
+            for cell in self.cells:
+                file.write(str(cell) + "\n")
+
     def initialize(self, map, width, height):
         pygame.init()
         self.initialize_water()
@@ -47,12 +53,7 @@ class Visualizer:
         self.original_obraz = pygame.image.load(map)
         self.window.blit(self.obraz, (0, 0))
         self.cells = set_vectors_and_temps(create_cells(width, height))
-        # Zapis pliku tekstowego z info o cellach i wyświetlanie ich
-        # path = os.path.join("data", "cells.txt")
-        # with open(path, 'w') as file:
-        #     for cell in self.cells:
-        #         file.write(str(cell) + "\n")
-
+        self.log_cells()
         pygame.display.update()
 
     def session(self):
