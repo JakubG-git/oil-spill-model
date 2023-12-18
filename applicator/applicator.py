@@ -21,9 +21,10 @@ def advection(particle: Particle, vis):
 
 
 
-def evaporation(particle: Particle, current_cell: Cell, vis):
+def evaporation(particle: Particle, vis):
     # evaporate based on water temp and density
     # changes drawing color in visualiser
+    current_cell = particle.get_current_cell(vis)
     if current_cell and current_cell.water_temp and particle.isActive and not particle.isDead:
         if particle.density <= 0:
             particle.isActive = False
@@ -31,9 +32,10 @@ def evaporation(particle: Particle, current_cell: Cell, vis):
              particle.density -= 0.00001 * current_cell.water_temp
 
 
-def spreading(particle: Particle, current_cell: Cell, vis):
+def spreading(particle: Particle, vis):
     # particles have low probability of spreading
     # create new particles by spreading giving it half of its orginal density and append to particles list in visualiser
+    current_cell = particle.get_current_cell(vis)
     if current_cell and current_cell.water_temp and particle.isActive and particle.density > 0:
         if rand.random() < 0.005:
             particle.density /= 2
