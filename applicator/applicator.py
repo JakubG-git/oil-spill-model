@@ -5,11 +5,9 @@ import random as rand
 
 def move_particles(vis):
     for particle in vis.get_particles():
-        current_cell = particle.get_current_cell(vis)
-        advection(particle, current_cell, vis)
-        evaporation(particle, current_cell, vis)
-
-        spreading(particle, current_cell, vis)
+        advection(particle, vis)
+        evaporation(particle, vis)
+        spreading(particle, vis)
         vis.update_particle(particle)
     vis.update()
 
