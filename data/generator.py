@@ -1,8 +1,5 @@
 import numpy as np
 from model.cell import Cell
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
-from PIL import Image
 import pandas as pd
 import os
 
@@ -48,8 +45,9 @@ def generate_wind_vectors(wind_speed: float, wind_direction: float) -> list[tupl
     return wind_vectors
 
 
-def get_water_vectors() -> list[tuple[float, float]]:
+def get_water_info() -> tuple[list[tuple[float, float]], list[float]]:
     water_vectors = []
+    water_temps = []
     path = os.path.join('data', 'preprocessing', 'hycom_with_NaN_values.csv')
     df = pd.read_csv(path)
     df_size = len(df)
@@ -57,57 +55,42 @@ def get_water_vectors() -> list[tuple[float, float]]:
     for i in range(df_size):
         if df['water_u'][i] != '--':
             water_vectors.append((float(df['water_u'][i]), float(df['water_v'][i])))
+            water_temps.append(float(df['water_temp'][i]))
         else:
             water_vectors.append((0.0, 0.0))
+            water_temps.append(0.0)
 
     water_vectors_rows = []
+    water_temps_rows = []
     for i in range(360):
         water_vectors_rows.append(water_vectors[i * 420:(i + 1) * 420])
+        water_temps_rows.append(water_temps[i * 420:(i + 1) * 420])
     water_vectors_rows.reverse()
+    water_temps_rows.reverse()
     water_vectors2 = []
+    water_temps2 = []
     for row in water_vectors_rows:
         water_vectors2 += row
 
-    return water_vectors2
-
-
-def get_temps() -> list[float]:
-    water_vectors = []
-    path = os.path.join('data', 'preprocessing', 'hycom_with_NaN_values.csv')
-    df = pd.read_csv(path)
-    df_size = len(df)
-
-    for i in range(df_size):
-        if df['water_u'][i] != '--':
-            water_vectors.append(float(df['water_temp'][i]))
-        else:
-            water_vectors.append(0.0)
-    return water_vectors
+    for row in water_temps_rows:
+        water_temps2 += row
+    return water_vectors2, water_temps2
 
 
 def set_vectors_and_temps(cells: list[Cell]) -> list[Cell]:
     cells = set_wind_vectors(cells)
-    cells = set_water_vectors(cells)
-    cells = set_temps(cells)
+    cells = set_water_info(cells)
     return cells
 
-
-def set_water_vectors(cells: list[Cell]) -> list[Cell]:
-    water_vectors = get_water_vectors()
+def set_water_info(cells: list[Cell]) -> list[Cell]:
+    water_vectors, water_temps = get_water_info()
     for i in range(len(cells)):
         cells[i].set_water_wector(water_vectors[i])
+        cells[i].set_water_temp(water_temps[i])
     return cells
-
 
 def set_wind_vectors(cells: list[Cell]) -> list[Cell]:
     wind_vectors = generate_wind_vectors(2, np.random.uniform(0, 360))
     for i in range(len(cells)):
         cells[i].set_wind_wector(wind_vectors[i])
-    return cells
-
-
-def set_temps(cells: list[Cell]) -> list[Cell]:
-    temps = get_temps()
-    for i in range(len(cells)):
-        cells[i].set_water_temp(temps[i])
     return cells
