@@ -81,7 +81,7 @@ class Visualizer:
                         self.obraz = copy(self.original_obraz)
                         move_particles(self)
                         # sleep 0.3s
-                        pygame.time.delay(300)
+                        pygame.time.delay(50)
                         for event in pygame.event.get():
                             if event.type == pygame.QUIT:
                                 main_loop = False

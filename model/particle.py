@@ -33,8 +33,8 @@ class Particle:
 
     def get_coords_of_particle(self) -> list:
         coords = []
-        for i in range(-2, 2):
-            for j in range(-2, 2):
+        for i in range(-1, 2):
+            for j in range(-1, 2):
                 coords.append((int(self.x + i), int(self.y + j)))
         return coords
     
@@ -43,5 +43,7 @@ class Particle:
         r = int(255 - (255 * self.density)) % 255
         g = int(255 - (255 * self.density)) % 255
         b = int(255 - (255 * self.density)) % 255
+        if r > 100:
+            self.isActive = False
         return (r, g, b)
         
