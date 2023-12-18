@@ -6,11 +6,6 @@ from PIL import Image
 import pandas as pd
 import os
 
-
-# cells is a list of Cell objects, i have a map consisting of 16x12 cells
-# i want this function to generate wind vectors for each cell
-# but in a pattern that makes sense, meaning that the wind vectors should be
-# similar to each other in a certain area
 def generate_wind_vectors(wind_speed: float, wind_direction: float) -> list[tuple[float, float]]:
     rows = 360
     columns = 420

@@ -9,7 +9,6 @@ def move_particles(vis):
         advection(particle, current_cell, vis)
         evaporation(particle, current_cell, vis)
 
-        # ponizsza linia do odkomentowania jak bedzie gotowe
         spreading(particle, current_cell, vis)
         vis.update_particle(particle)
     vis.update()
@@ -18,7 +17,6 @@ def move_particles(vis):
 
 def advection(particle: Particle, vis):
     current_cell = particle.get_current_cell(vis)
-    # nie wiem czy mnożenie wiatru przez skalar jest okej bo wtedy mamy zależność wiatru dużo większą od zależności wody
     if current_cell and current_cell.wind_vector and current_cell.water_vector and particle.isActive:
         particle.x = (particle.x + ( 0.03 * current_cell.wind_vector[0]) +  1.1 * current_cell.water_vector[0])
         particle.y = (particle.y + ( 0.03 * current_cell.wind_vector[1]) +  1.1 * current_cell.water_vector[1])
@@ -42,4 +40,3 @@ def spreading(particle: Particle, current_cell: Cell, vis):
         if rand.random() < 0.005:
             particle.density /= 2
             vis.particles.append(Particle(particle.x + 1, particle.y + 1, particle.density))
-            # print(f"spread for {particle}")

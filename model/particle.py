@@ -28,7 +28,6 @@ class Particle:
             current_cell = vis.get_cells()[index]
         except:
             current_cell = vis.get_cells()[index % len(vis.get_cells())]
-        # print(current_cell)
         return current_cell
 
     def get_coords_of_particle(self) -> list:

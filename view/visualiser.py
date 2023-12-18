@@ -48,10 +48,10 @@ class Visualizer:
         self.window.blit(self.obraz, (0, 0))
         self.cells = set_vectors_and_temps(create_cells(width, height))
         # Zapis pliku tekstowego z info o cellach i wyświetlanie ich
-        path = os.path.join("data", "cells.txt")
-        with open(path, 'w') as file:
-            for cell in self.cells:
-                file.write(str(cell) + "\n")
+        # path = os.path.join("data", "cells.txt")
+        # with open(path, 'w') as file:
+        #     for cell in self.cells:
+        #         file.write(str(cell) + "\n")
 
         pygame.display.update()
 
@@ -114,9 +114,6 @@ class Visualizer:
 
     def update(self):
         pygame.display.update()
-        # self.cells = set_wind_vectors(self.cells)
-        # print(self.cells[15].wind_vector)
-        # self.draw_cells()
         self.window.blit(self.obraz, (0, 0))
 
     def update_particle(self, particle: Particle):
