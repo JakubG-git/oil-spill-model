@@ -12,13 +12,11 @@ def move_particles(vis):
     vis.update()
 
 
-
 def advection(particle: Particle, vis):
     current_cell = particle.get_current_cell(vis)
     if current_cell and current_cell.wind_vector and current_cell.water_vector and particle.isActive:
-        particle.x = (particle.x + ( 0.03 * current_cell.wind_vector[0]) +  1.1 * current_cell.water_vector[0])
-        particle.y = (particle.y + ( 0.03 * current_cell.wind_vector[1]) +  1.1 * current_cell.water_vector[1])
-
+        particle.x = (particle.x + (0.03 * current_cell.wind_vector[0]) + 1.1 * current_cell.water_vector[0])
+        particle.y = (particle.y + (0.03 * current_cell.wind_vector[1]) + 1.1 * current_cell.water_vector[1])
 
 
 def evaporation(particle: Particle, vis):
@@ -29,7 +27,7 @@ def evaporation(particle: Particle, vis):
         if particle.density <= 0:
             particle.isActive = False
         else:
-             particle.density -= 0.00001 * current_cell.water_temp
+            particle.density -= 0.00001 * current_cell.water_temp
 
 
 def spreading(particle: Particle, vis):
