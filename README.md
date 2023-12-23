@@ -42,7 +42,7 @@ python main.py
 Narysuj myszką obszar wycieku ropy. Klawisz 'space' rozpoczyna i pauzuje symulację. 
 
 ## Przykładowa symulacja
-![example](example.gif)
+![example](images/example.gif)
 
 ## Autorzy
 W razie pytań, sugestii lub problemów zapraszamy do kontaktu:
