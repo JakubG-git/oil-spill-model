@@ -51,3 +51,4 @@ W razie pytań, sugestii lub problemów zapraszamy do kontaktu:
 - [Hubert Asztabski](https://github.com/Sztaba)
 
 ## Pełna dokumentacja
+[Oil Spill Model - dokumentacja](https://www.overleaf.com/read/dpmgjtqsbvrj#bcff1c)
